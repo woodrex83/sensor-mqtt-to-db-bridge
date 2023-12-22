@@ -1,5 +1,6 @@
-![](https://img.shields.io/badge/python-%203.11%20-blue) ![](https://img.shields.io/badge/paho_mqtt-1.6.1-blue) ![](https://img.shields.io/badge/pika-1.3.2-blue) ![](https://img.shields.io/badge/confluent_kafka-2.3.0-blue)
 # sensor-mqtt-to-db-bridge
+![](https://img.shields.io/badge/python-%203.11%20|%203.12%20-blue) ![](https://img.shields.io/badge/paho_mqtt-1.6.1-blue) ![](https://img.shields.io/badge/pika-1.3.2-blue) ![](https://img.shields.io/badge/confluent_kafka-2.3.0-blue)
+
 A bridging connector designed to facilitate the transfer of data from Lorawan IoT sensors utilizing MQTT/AMQP to a database.
 
 
