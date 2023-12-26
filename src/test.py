@@ -7,7 +7,6 @@ from src.db.database import AsyncDatabase
 
 from src.schemas.lorawan_object import LorawanPayloadInput
 from src.settings import settings
-from src.utils import convert_keys
 
 message = '''{
     "applicationID":"1",
