@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -38,4 +39,3 @@ class LorawanPayloadInput(BaseModel):
     fPort: int
     data: str
     object: dict
-

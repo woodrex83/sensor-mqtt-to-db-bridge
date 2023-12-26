@@ -1,10 +1,10 @@
 import asyncio
-import pendulum
-import orjson
+from abc import ABC
 
+import orjson
+import pendulum
 from aiomqtt import Client as MQTTClient
 from aiomqtt import Message, MqttError
-from abc import ABC
 from loguru import logger
 
 from src.schemas.lorawan_object import LorawanPayloadInput
@@ -14,7 +14,7 @@ from src.settings import MQTTSettings
 class Subject(ABC):
     def __init__(self):
         self.observers = []
-    
+
     def attach(self, observer):
         self.observers.append(observer)
 
@@ -35,20 +35,20 @@ class MQTTSubject(Subject):
         self._username = mq.username
         self._password = mq.password
         self._client = None
-    
+
     def __setattr__(self, name, value):
-        if name in ['host', 'port', 'topic_filter', 'username', 'password', 'client']:
-            private_name = '_' + name
+        if name in ["host", "port", "topic_filter", "username", "password", "client"]:
+            private_name = "_" + name
             super().__setattr__(private_name, value)
         else:
             super().__setattr__(name, value)
-    
+
     def __getattr__(self, name):
-        private_name = '_' + name
+        private_name = "_" + name
         if private_name in self.__dict__:
             return getattr(self, private_name)
         logger.warning(f" [x] '{type(self).__name__}' object has no attribute '{name}'")
-    
+
     async def start(self):
         while True:
             try:
@@ -56,9 +56,9 @@ class MQTTSubject(Subject):
                     hostname=self.host,
                     port=self.port,
                     username=self.username,
-                    password=self.password
+                    password=self.password,
                 )
-                
+
                 async with self.client as client:
                     for topic in self.topic_filter:
                         await client.subscribe(topic)
@@ -72,15 +72,12 @@ class MQTTSubject(Subject):
             except MqttError as mqtt_err:
                 logger.warning(f" [x] MQTT error occurred: {mqtt_err}, retrying in 1 second.")
                 await asyncio.sleep(1)
-            except KeyboardInterrupt: 
+            except KeyboardInterrupt:
                 logger.info(" [x] Received keyboard interrupt...")
             except Exception as err:
                 logger.error(f" [x] An error occurred: {err}")
 
-    async def process_message(
-        self,
-        message: Message
-    ):
+    async def process_message(self, message: Message):
         topic = str(message.topic)
         now = pendulum.now()
         json_payload = orjson.loads(message.payload)

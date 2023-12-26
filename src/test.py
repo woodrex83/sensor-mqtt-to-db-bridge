@@ -1,14 +1,14 @@
 import asyncio
+
 import orjson
 import pendulum
 
-from src.observers.db_observer import PostgresDBObserver
 from src.db.database import AsyncDatabase
-
+from src.observers.db_observer import PostgresDBObserver
 from src.schemas.lorawan_object import LorawanPayloadInput
 from src.settings import settings
 
-message = '''{
+message = """{
     "applicationID":"1",
     "applicationName":"test_ds18b20",
     "deviceName":"arduino_uno",
@@ -40,7 +40,8 @@ message = '''{
     "object":{
         
     }
-}'''
+}"""
+
 
 async def main():
     json_payload = orjson.loads(message)
@@ -52,6 +53,7 @@ async def main():
     await db.start()
     db_observer = PostgresDBObserver(db=db)
     await db_observer.update(lora_payload)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
