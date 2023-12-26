@@ -1,14 +1,13 @@
+![](https://img.shields.io/badge/python-%203.11%20|%203.12%20-blue) ![](https://img.shields.io/badge/aiomqtt-1.2.1-blue) ![](https://img.shields.io/badge/aio_pika-9.3.1-blue)
 # sensor-mqtt-to-db-bridge
-![](https://img.shields.io/badge/python-%203.11%20|%203.12%20-blue) ![](https://img.shields.io/badge/paho_mqtt-1.6.1-blue) ![](https://img.shields.io/badge/pika-1.3.2-blue) ![](https://img.shields.io/badge/confluent_kafka-2.3.0-blue)
-
-A bridging connector designed to facilitate the transfer of data from Lorawan IoT sensors utilizing MQTT/AMQP to a database.
+A bridging connector designed to facilitate the transfer of data from ChirpStack utilizing MQTT/AMQP to a database.
 
 
 ## Structure
 
 *Rabbit MQ version is released in **amqp** branch.
-(horizontal flow chart)
-(Whole system with circle)
+
+![architecture](resources/MQTT.png)  
 
 ## Feature
 
@@ -19,16 +18,20 @@ A bridging connector designed to facilitate the transfer of data from Lorawan Io
     + Support v3.1/3.1.1 in AMQP
     + Support v3.1/3.1.1/5 in MQTT
 
--   Create record in postgres db
+-   Create record in Postgres
 
 
 ## Config
 Rename **config.toml.example** to **config.toml**
 ```
 [mqtt]
-broker_address = "<your_endpoint>"
-broker_port = 1883
-topic = "+/+/+/#"
+host = "localhost"
+port = 1883
+username = ""
+password = ""
+topic_filter = [
+    "application/+/device/+/event/up"
+]
 
 [db]
 dbhost = "localhost"
@@ -40,7 +43,10 @@ table = "lorawan_raw_data"
 ```
 
 
-## Performance
+## Use cases
++ 1 Deployment for 1 project
++ Each deployment should subscribe <500 routing keys
+
 ### Test Environment
 **DO NOT use the following setting in production environment !!**
 - MQTT Broker
@@ -55,10 +61,9 @@ table = "lorawan_raw_data"
 
 - Postgres
     ```
-    docker run -it --name test-pg -p 5500:5432 -e POSTGRES_PASSWORD=postgres -d postgres:15-alpine
+    docker run -it --name test-pg -p 5500:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=iot -d postgres:15-alpine
     ```
-    
-### Result
+
 
 
 

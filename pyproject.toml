@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "sensor-mqtt-to-db-bridge"
+version = "0.1.1"
+description = ""
+authors = ["woodrex83 <woodrex83@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.black]
+line-length = 96
+
+[tool.isort]
+profile = "black"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+loguru = "^0.7.2"
+pydantic = "^2.5.3"
+pydantic-settings = "^2.1.0"
+pendulum = "^3.0.0"
+sqlalchemy = "^2.0.23"
+asyncpg = "^0.29.0"
+orjson = "^3.9.10"
+aiomqtt = "^1.2.1"
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.13.2"
+black = "^23.12.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

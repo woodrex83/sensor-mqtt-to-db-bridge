@@ -1,0 +1,16 @@
+[mqtt]
+host = "localhost"
+port = 1883
+username = ""
+password = ""
+topic_filter = [
+    "application/+/device/+/event/up"
+]
+
+[db]
+dbhost = "localhost"
+port = 5500
+username = "postgres"
+password = "postgres"
+db_name = "iot"
+table = "lorawan_raw_data"
