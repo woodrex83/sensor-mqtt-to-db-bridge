@@ -13,7 +13,7 @@ from src.settings import AMQPSettings
 class Subject(ABC):
     def __init__(self):
         self.observers = []
-    
+
     def attach(self, observer):
         self.observers.append(observer)
 
@@ -34,31 +34,36 @@ class RabbitMQSubject(Subject):
         self._topic_filter = amqp.topic_filter
         self._channel = None
         self._connection = None
-    
+
     def __setattr__(self, name, value):
-        if name in ['url', 'queue_name', 'queue_args', 'topic_filter', 'channel', 'connection']:
-            private_name = '_' + name
+        if name in [
+            "url",
+            "queue_name",
+            "queue_args",
+            "topic_filter",
+            "channel",
+            "connection",
+        ]:
+            private_name = "_" + name
             super().__setattr__(private_name, value)
         else:
             super().__setattr__(name, value)
-    
+
     def __getattr__(self, name):
-        private_name = '_' + name
+        private_name = "_" + name
         if private_name in self.__dict__:
             return getattr(self, private_name)
         logger.warning(f" [x] '{type(self).__name__}' object has no attribute '{name}'")
-    
+
     async def start(self):
         while True:
             try:
                 self.connection = await connect_robust(self._url)
-                
+
                 async with self.connection:
                     self.channel = await self.connection.channel()
                     queue = await self.channel.declare_queue(
-                        name=self.queue_name,
-                        durable=True,
-                        arguments=self.queue_args
+                        name=self.queue_name, durable=True, arguments=self.queue_args
                     )
                     await queue.consume(self.process_message)
 
@@ -67,17 +72,14 @@ class RabbitMQSubject(Subject):
             except exceptions.AMQPConnectionError:
                 logger.warning(" [x] Connection fail, retrying in 1 second.")
                 await asyncio.sleep(1)
-            except KeyboardInterrupt: 
+            except KeyboardInterrupt:
                 logger.info(" [x] Received keyboard interrupt...")
             except Exception as err:
                 logger.error(f" [x] An error occurred: {err}")
             finally:
                 await self.connection.close()
 
-    async def process_message(
-        self,
-        message: IncomingMessage
-    ):
+    async def process_message(self, message: IncomingMessage):
         # Check topic
         topic = message.routing_key.replace(".", "/")
         now = pendulum.now()
@@ -97,5 +99,5 @@ class RabbitMQSubject(Subject):
             except ValueError as err:
                 # self.upload_error_output(err)
                 logger.error(f" [x] Invalid raw data received from AMQP: {err}")
-            
+
             await message.ack()

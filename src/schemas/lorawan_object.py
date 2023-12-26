@@ -38,4 +38,3 @@ class LorawanPayloadInput(BaseModel):
     fPort: int
     data: str
     object: dict
-

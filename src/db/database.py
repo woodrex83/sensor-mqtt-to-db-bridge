@@ -17,27 +17,26 @@ class AsyncDatabase:
         self._engine = None
         self._session = None
         self._async_session = None
-    
+
     def __setattr__(self, name, value):
-        if name in ['username', 'password', 'dbhost', 'port', 'db_name']:
-            private_name = '_' + name
+        if name in ["username", "password", "dbhost", "port", "db_name"]:
+            private_name = "_" + name
             super().__setattr__(private_name, value)
         else:
             super().__setattr__(name, value)
-    
+
     def __getattr__(self, name):
-        private_name = '_' + name
+        private_name = "_" + name
         if private_name in self.__dict__:
             return getattr(self, private_name)
-        raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
-    
+        raise AttributeError(
+            f"'{type(self).__name__}' object has no attribute '{name}'"
+        )
+
     async def start(self):
         uri = f"postgresql+asyncpg://{self.username}:{self.password}@{self.dbhost}:{self.port}/{self.db_name}"
         self.engine = create_async_engine(
-            uri,
-            echo=False,
-            pool_size=10,
-            max_overflow=100
+            uri, echo=False, pool_size=10, max_overflow=100
         )
         self.async_session = async_sessionmaker(
             self.engine, expire_on_commit=False, class_=AsyncSession
@@ -60,7 +59,7 @@ class AsyncDatabase:
             await self.session.commit()
 
         await self.session.close()
-    
+
     async def close(self):
         if self.session:
             await self.session.close()

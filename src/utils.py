@@ -1,5 +1,6 @@
 import re
 
+
 def convert_keys(message: dict) -> dict:
     """
     Convert keys to a suitable format for a database.
@@ -13,6 +14,7 @@ def convert_keys(message: dict) -> dict:
         new_key = new_key.lower()
         new_dict[new_key] = value
     return new_dict
+
 
 def rename_fields(payload: dict, field_mapping: dict) -> dict:
     for old_name, new_name in field_mapping.items():

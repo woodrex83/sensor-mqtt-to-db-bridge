@@ -16,13 +16,13 @@ class Observer(ABC):
 class PostgresDBObserver(Observer):
     def __init__(self, db: AsyncSession):
         self._db = db
-    
+
     def __getattr__(self, name):
-        private_name = '_' + name
+        private_name = "_" + name
         if private_name in self.__dict__:
             return getattr(self, private_name)
         logger.warning(f" [x] '{type(self).__name__}' object has no attribute '{name}'")
-    
+
     async def update(self, message: LorawanPayloadInput):
         message_dict = message.model_dump()
         record = convert_keys(message_dict)

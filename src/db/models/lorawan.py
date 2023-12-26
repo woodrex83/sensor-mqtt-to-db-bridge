@@ -34,7 +34,7 @@ class Lorawan(Base):
     @classmethod
     async def create(cls, db, record: dict) -> Union[None, dict]:
         # Convert fields that need JSON encoding
-        for field in ['rx_info', 'tx_info', 'object']:
+        for field in ["rx_info", "tx_info", "object"]:
             if field in record and record[field] is not None:
                 record[field] = json.dumps(record[field])
 
@@ -48,9 +48,6 @@ class Lorawan(Base):
             except Exception as err:
                 await session.rollback()
                 logger.warning(err)
-                result = {
-                    "error": err, 
-                    "invalid_data": record
-                }
+                result = {"error": err, "invalid_data": record}
 
             return result

@@ -9,7 +9,7 @@ from src.schemas.lorawan_object import LorawanPayloadInput
 from src.settings import settings
 from src.utils import convert_keys
 
-message = '''{
+message = """{
     "applicationID":"1",
     "applicationName":"test_ds18b20",
     "deviceName":"arduino_uno",
@@ -41,7 +41,8 @@ message = '''{
     "object":{
         
     }
-}'''
+}"""
+
 
 async def main():
     json_payload = orjson.loads(message)
@@ -53,6 +54,7 @@ async def main():
     await db.start()
     db_observer = PostgresDBObserver(db=db)
     await db_observer.update(lora_payload)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
