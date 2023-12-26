@@ -5,10 +5,11 @@ from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
 
-class AMQPSettings(BaseModel):
-    url: str
-    queue_name: str
-    queue_arguments: dict
+class MQTTSettings(BaseModel):
+    host: str
+    port: int
+    username: str
+    password: str
     topic_filter: list[str]
 
 
@@ -22,7 +23,7 @@ class DatabaseSettings(BaseModel):
 
 
 class Settings(BaseSettings):
-    amqp: AMQPSettings
+    mqtt: MQTTSettings
     db: DatabaseSettings
 
 
