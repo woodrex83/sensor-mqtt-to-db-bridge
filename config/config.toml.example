@@ -1,10 +1,10 @@
-[amqp]
-url = "amqp://guest:guest@localhost:5672"
-queue_name = "lorawan"
-queue_arguments = {"x-message-ttl" = 10800000}
+[mqtt]
+host = "localhost"
+port = 1883
+username = ""
+password = ""
 topic_filter = [
-    "application/APPLICATION_ID/device/DEV_EUI_A/event/up",
-    "application/APPLICATION_ID/device/DEV_EUI_B/event/up"
+    "application/+/device/+/event/up"
 ]
 
 [db]
