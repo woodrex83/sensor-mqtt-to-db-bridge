@@ -1,12 +1,12 @@
+![](https://img.shields.io/badge/python-%203.11%20|%203.12%20-blue) ![](https://img.shields.io/badge/aiomqtt-1.2.1-blue) ![](https://img.shields.io/badge/aio_pika-9.3.1-blue)
 # sensor-mqtt-to-db-bridge
-![](https://img.shields.io/badge/python-%203.11%20|%203.12%20-blue) ![](https://img.shields.io/badge/paho_mqtt-1.6.1-blue) ![](https://img.shields.io/badge/pika-1.3.2-blue) ![](https://img.shields.io/badge/confluent_kafka-2.3.0-blue)
-
-A bridging connector designed to facilitate the transfer of data from Lorawan IoT sensors utilizing MQTT/AMQP to a database.
+A bridging connector designed to facilitate the transfer of data from ChirpStack utilizing MQTT/AMQP to a database.
 
 
 ## Structure
 
 *Rabbit MQ version is released in **amqp** branch.
+
 (horizontal flow chart)
 (Whole system with circle)
 
@@ -19,16 +19,20 @@ A bridging connector designed to facilitate the transfer of data from Lorawan Io
     + Support v3.1/3.1.1 in AMQP
     + Support v3.1/3.1.1/5 in MQTT
 
--   Create record in postgres db
+-   Create record in Postgres
 
 
 ## Config
 Rename **config.toml.example** to **config.toml**
 ```
-[mqtt]
-broker_address = "<your_endpoint>"
-broker_port = 1883
-topic = "+/+/+/#"
+[amqp]
+url = "amqp://guest:guest@localhost:5672"
+queue_name = "lorawan"
+queue_arguments = {"x-message-ttl" = 10800000}
+topic_filter = [
+    "application/APPLICATION_ID/device/DEV_EUI_A/event/up",
+    "application/APPLICATION_ID/device/DEV_EUI_B/event/up"
+]
 
 [db]
 dbhost = "localhost"
@@ -43,19 +47,9 @@ table = "lorawan_raw_data"
 ## Performance
 ### Test Environment
 **DO NOT use the following setting in production environment !!**
-- MQTT Broker
-    ```
-    docker run -it -p 1883:1883 -p 9001:9001 -v mosquitto.conf:/mosquitto/config/mosquitto.conf eclipse-mosquitto:2.0.18
-    ```
-    mosquitto.conf
-    ```
-    listener 1883
-    allow_anonymous true
-    ```
-
 - Postgres
     ```
-    docker run -it --name test-pg -p 5500:5432 -e POSTGRES_PASSWORD=postgres -d postgres:15-alpine
+    docker run -it --name test-pg -p 5500:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=iot -d postgres:15-alpine
     ```
     
 ### Result
