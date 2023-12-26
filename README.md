@@ -7,7 +7,7 @@ A bridging connector designed to facilitate the transfer of data from ChirpStack
 
 *Rabbit MQ version is released in **amqp** branch.
 
-![architecture](resources/AMQP.png)  
+![architecture](resources/MQTT.png)  
 
 ## Feature
 
@@ -24,13 +24,13 @@ A bridging connector designed to facilitate the transfer of data from ChirpStack
 ## Config
 Rename **config.toml.example** to **config.toml**
 ```
-[amqp]
-url = "amqp://guest:guest@localhost:5672"
-queue_name = "lorawan"
-queue_arguments = {"x-message-ttl" = 10800000}
+[mqtt]
+host = "localhost"
+port = 1883
+username = ""
+password = ""
 topic_filter = [
-    "application/APPLICATION_ID/device/DEV_EUI_A/event/up",
-    "application/APPLICATION_ID/device/DEV_EUI_B/event/up"
+    "application/+/device/+/event/up"
 ]
 
 [db]
@@ -49,6 +49,16 @@ table = "lorawan_raw_data"
 
 ### Test Environment
 **DO NOT use the following setting in production environment !!**
+- MQTT Broker
+    ```
+    docker run -it -p 1883:1883 -p 9001:9001 -v mosquitto.conf:/mosquitto/config/mosquitto.conf eclipse-mosquitto:2.0.18
+    ```
+    mosquitto.conf
+    ```
+    listener 1883
+    allow_anonymous true
+    ```
+
 - Postgres
     ```
     docker run -it --name test-pg -p 5500:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=iot -d postgres:15-alpine
