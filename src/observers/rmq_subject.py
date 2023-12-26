@@ -97,3 +97,5 @@ class RabbitMQSubject(Subject):
             except ValueError as err:
                 # self.upload_error_output(err)
                 logger.error(f" [x] Invalid raw data received from AMQP: {err}")
+            
+            await message.ack()
