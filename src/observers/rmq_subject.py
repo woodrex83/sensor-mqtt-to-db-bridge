@@ -91,7 +91,7 @@ class RabbitMQSubject(Subject):
 
             try:
                 lora_payload = LorawanPayloadInput.model_validate(json_payload)
-                logger.success(lora_payload)
+                # logger.success(lora_payload)
                 await self.notify(lora_payload)
 
             except ValueError as err:

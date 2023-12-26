@@ -33,7 +33,12 @@ class AsyncDatabase:
     
     async def start(self):
         uri = f"postgresql+asyncpg://{self.username}:{self.password}@{self.dbhost}:{self.port}/{self.db_name}"
-        self.engine = create_async_engine(uri, echo=True)
+        self.engine = create_async_engine(
+            uri,
+            echo=False,
+            pool_size=10,
+            max_overflow=100
+        )
         self.async_session = async_sessionmaker(
             self.engine, expire_on_commit=False, class_=AsyncSession
         )
