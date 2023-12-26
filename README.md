@@ -7,8 +7,7 @@ A bridging connector designed to facilitate the transfer of data from ChirpStack
 
 *Rabbit MQ version is released in **amqp** branch.
 
-(horizontal flow chart)
-(Whole system with circle)
+![architecture](resources/AMQP.png)  
 
 ## Feature
 
