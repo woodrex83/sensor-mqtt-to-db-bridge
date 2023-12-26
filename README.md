@@ -44,15 +44,17 @@ table = "lorawan_raw_data"
 ```
 
 
-## Performance
+## Use cases
++ 1 Deployment for 1 project use
++ Each deployment should subscribe <500 routing keys
+
 ### Test Environment
 **DO NOT use the following setting in production environment !!**
 - Postgres
     ```
     docker run -it --name test-pg -p 5500:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=iot -d postgres:15-alpine
     ```
-    
-### Result
+
 
 
 
