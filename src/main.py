@@ -1,9 +1,8 @@
 import asyncio
 
 from loguru import logger
-from time import sleep
 
-from src.observers.rmq_subject import RabbitMQSubject
+from src.observers.mqtt_subject import MQTTSubject
 from src.observers.db_observer import PostgresDBObserver
 from src.db.database import AsyncDatabase
 from src.settings import settings
@@ -13,14 +12,14 @@ async def main():
         db = AsyncDatabase(db=settings.db)
         await db.start()
 
-        rabbitmq_subject = RabbitMQSubject(amqp=settings.amqp)
+        mqtt_subject = MQTTSubject(mq=settings.mqtt)
         db_observer = PostgresDBObserver(db=db)
         
-        rabbitmq_subject.attach(db_observer)
-        await rabbitmq_subject.start()
+        mqtt_subject.attach(db_observer)
+        await mqtt_subject.start()
 
     except KeyboardInterrupt:
-        logger.info(" [x] AMQP stop consuming now...")
+        logger.info(" [x] MQTT stop consuming now...")
     finally:
         await db.close()
 
