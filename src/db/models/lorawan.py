@@ -9,7 +9,6 @@ from sqlalchemy.dialects.postgresql import UUID as pgUUID
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import declarative_base
 
-from src.schemas.lorawan_object import LorawanPayloadInput
 from src.settings import settings
 
 Base = declarative_base()
