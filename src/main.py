@@ -6,6 +6,9 @@ from src.db.database import AsyncDatabase
 from src.observers.db_observer import PostgresDBObserver
 from src.observers.mqtt_subject import MQTTSubject
 from src.settings import settings
+import uvloop
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
 async def main():
