@@ -57,6 +57,7 @@ class MQTTSubject(Subject):
                     port=self.port,
                     username=self.username,
                     password=self.password,
+                    max_concurrent_outgoing_calls=100
                 )
 
                 async with self.client as client:
@@ -64,7 +65,7 @@ class MQTTSubject(Subject):
                         await client.subscribe(topic)
 
                     logger.success(" [x] Waiting for messages. To exit press CTRL+C")
-                    async with client.messages() as messages:
+                    async with client.messages(queue_maxsize=500) as messages:
                         async for message in messages:
                             await self.process_message(message)
                             # await asyncio.Future()
