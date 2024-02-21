@@ -1,3 +1,4 @@
+import asyncio
 from abc import ABC, abstractmethod
 
 from loguru import logger
@@ -19,7 +20,8 @@ class PostgresDBObserver(Observer):
 
     async def update(self, message: LorawanPayloadInput):
         record = message.model_dump()
-        result = await Lorawan.create(self._db._session, record)
+        task = asyncio.create_task(Lorawan.create(self._db._session, record))
+        result = await task
 
         if result:
             # await self.upload_error_output(result)
