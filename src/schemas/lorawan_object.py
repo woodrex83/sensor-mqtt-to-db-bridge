@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class RxInfo(BaseModel):
@@ -28,14 +28,14 @@ class TxInfo(BaseModel):
 
 
 class LorawanPayloadInput(BaseModel):
-    applicationID: str
-    applicationName: str
-    deviceName: str
-    devEUI: str
-    createdTime: Optional[datetime]
-    rxInfo: list[RxInfo]
-    txInfo: TxInfo
-    fCnt: int
-    fPort: int
+    application_id: str = Field(alias="applicationID")
+    application_name: str = Field(alias="applicationName")
+    device_name: str = Field(alias="deviceName")
+    dev_eui: str = Field(alias="devEUI")
+    created_time: Optional[datetime] = Field(alias="createdTime")
+    rx_info: list[RxInfo] = Field(alias="rxInfo")
+    tx_info: TxInfo = Field(alias="txInfo")
+    f_cnt: int = Field(alias="fCnt")
+    f_port: int = Field(alias="fPort")
     data: str
     object: dict

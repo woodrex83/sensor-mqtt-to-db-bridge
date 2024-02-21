@@ -11,11 +11,9 @@ import uvloop
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
-async def main():
+async def main() -> None:
     try:
         db = AsyncDatabase(db=settings.db)
-        await db.start()
-
         mqtt_subject = MQTTSubject(mq=settings.mqtt)
         db_observer = PostgresDBObserver(db=db)
 
@@ -24,8 +22,6 @@ async def main():
 
     except KeyboardInterrupt:
         logger.info(" [x] MQTT stop consuming now...")
-    finally:
-        await db.close()
 
 
 if __name__ == "__main__":

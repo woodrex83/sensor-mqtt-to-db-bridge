@@ -36,36 +36,23 @@ class MQTTSubject(Subject):
         self._password = mq.password
         self._client = None
 
-    def __setattr__(self, name, value):
-        if name in ["host", "port", "topic_filter", "username", "password", "client"]:
-            private_name = "_" + name
-            super().__setattr__(private_name, value)
-        else:
-            super().__setattr__(name, value)
-
-    def __getattr__(self, name):
-        private_name = "_" + name
-        if private_name in self.__dict__:
-            return getattr(self, private_name)
-        logger.warning(f" [x] '{type(self).__name__}' object has no attribute '{name}'")
-
     async def start(self):
         while True:
             try:
-                self.client = MQTTClient(
-                    hostname=self.host,
-                    port=self.port,
-                    username=self.username,
-                    password=self.password,
+                self._client = MQTTClient(
+                    hostname=self._host,
+                    port=self._port,
+                    username=self._username,
+                    password=self._password,
                     max_concurrent_outgoing_calls=100
                 )
 
-                async with self.client as client:
-                    for topic in self.topic_filter:
+                async with self._client as client:
+                    for topic in self._topic_filter:
                         await client.subscribe(topic)
 
                     logger.success(" [x] Waiting for messages. To exit press CTRL+C")
-                    async with client.messages(queue_maxsize=500) as messages:
+                    async with client.messages() as messages:
                         async for message in messages:
                             await self.process_message(message)
                             # await asyncio.Future()

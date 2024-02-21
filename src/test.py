@@ -52,7 +52,8 @@ async def main():
     db = AsyncDatabase(db=settings.db)
     await db.start()
     db_observer = PostgresDBObserver(db=db)
-    await db_observer.update(lora_payload)
+    for _ in range(1000):
+        await db_observer.update(lora_payload)
 
 
 if __name__ == "__main__":

@@ -45,7 +45,7 @@ table = "lorawan_raw_data"
 
 ## Use cases
 + 1 Deployment for 1 project
-+ Each deployment should subscribe <500 routing keys
++ Each deployment should subscribe <1500 routing keys
 
 ### Test Environment
 **DO NOT use the following setting in production environment !!**
