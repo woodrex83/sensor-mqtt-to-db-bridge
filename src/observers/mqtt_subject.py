@@ -44,7 +44,7 @@ class MQTTSubject(Subject):
                     port=self._port,
                     username=self._username,
                     password=self._password,
-                    max_concurrent_outgoing_calls=100
+                    max_concurrent_outgoing_calls=100,
                 )
 
                 async with self._client as client:
