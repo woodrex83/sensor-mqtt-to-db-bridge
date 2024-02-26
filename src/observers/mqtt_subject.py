@@ -3,6 +3,7 @@ from abc import ABC
 
 import orjson
 import pendulum
+from pendulum import DateTime
 from aiomqtt import Client as MQTTClient
 from aiomqtt import Message, MqttError
 from loguru import logger
@@ -29,11 +30,11 @@ class Subject(ABC):
 class MQTTSubject(Subject):
     def __init__(self, mq: MQTTSettings):
         super().__init__()
-        self._host = mq.host
-        self._port = mq.port
-        self._topic_filter = mq.topic_filter
-        self._username = mq.username
-        self._password = mq.password
+        self._host: str = mq.host
+        self._port: int = mq.port
+        self._topic_filter: str = mq.topic_filter
+        self._username: str = mq.username
+        self._password: str = mq.password
         self._client = None
 
     async def start(self):
@@ -46,7 +47,6 @@ class MQTTSubject(Subject):
                     password=self._password,
                     max_concurrent_outgoing_calls=100,
                 )
-
                 async with self._client as client:
                     for topic in self._topic_filter:
                         await client.subscribe(topic)
@@ -55,7 +55,6 @@ class MQTTSubject(Subject):
                     async with client.messages() as messages:
                         async for message in messages:
                             await self.process_message(message)
-                            # await asyncio.Future()
 
             except MqttError as mqtt_err:
                 logger.warning(f" [x] MQTT error occurred: {mqtt_err}, retrying in 1 second.")
@@ -65,10 +64,10 @@ class MQTTSubject(Subject):
             except Exception as err:
                 logger.error(f" [x] An error occurred: {err}")
 
-    async def process_message(self, message: Message):
-        topic = str(message.topic)
-        now = pendulum.now()
-        json_payload = orjson.loads(message.payload)
+    async def process_message(self, message: Message) -> None:
+        topic: str = message.topic
+        now: DateTime = pendulum.now()
+        json_payload: dict = orjson.loads(message.payload)
         json_payload["createdTime"] = now
         logger.debug(f" [x] Received message on topic '{topic}'")
 
