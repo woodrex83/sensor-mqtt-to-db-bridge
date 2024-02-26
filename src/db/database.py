@@ -9,18 +9,18 @@ class AsyncDatabase:
     """Manage asynchronous database sessions using SQLAlchemy"""
 
     def __init__(self, db: DatabaseSettings):
-        self._username = db.username
-        self._password = db.password
-        self._dbhost = db.dbhost
-        self._port = db.port
-        self._db_name = db.db_name
+        self._username: str = db.username
+        self._password: str = db.password
+        self._dbhost: int = db.dbhost
+        self._port: str = db.port
+        self._db_name: str = db.db_name
 
         uri = f"postgresql+asyncpg://{self._username}:{self._password}@{self._dbhost}:{self._port}/{self._db_name}"
         self._engine = create_async_engine(uri, echo=False, pool_size=10, max_overflow=100)
         self._sessionmaker = async_sessionmaker(
             self._engine, expire_on_commit=True, class_=AsyncSession
         )
-        self._session = self._sessionmaker()
+        self._session: AsyncSession = self._sessionmaker()
         logger.success(" [x] Database Session Created")
 
     async def start(self):
